@@ -1,7 +1,14 @@
 import { GetStaticProps } from 'next';
+import Link from 'next/link';
 import Head from 'next/head';
 import { FiCalendar, FiUser } from 'react-icons/fi';
+import Prismic from '@prismicio/client';
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
+import { useState } from 'react';
+import { Document } from '@prismicio/client/types/documents';
+import ApiSearchResponse from '@prismicio/client/types/ApiSearchResponse';
 import { getPrismicClient } from '../services/prismic';
 
 import styles from './home.module.scss';
@@ -26,106 +33,100 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps): JSX.Element {
+  const [posts, setPosts] = useState<Post[]>(postsPagination.results);
+  const [nextPage, setNextPage] = useState<string>(postsPagination.next_page);
+
+  async function handleMorePosts(): Promise<void> {
+    const response = await fetch(nextPage);
+    const jsonResponse = (await response.json()) as ApiSearchResponse;
+
+    const newPosts = jsonResponse.results.map((post: Document) => ({
+      uid: post.uid,
+      first_publication_date: post.first_publication_date,
+      data: {
+        title: post.data.title,
+        subtitle: post.data.subtitle,
+        author: post.data.author,
+      },
+    }));
+
+    setPosts([...posts, ...newPosts]);
+    setNextPage(jsonResponse.next_page);
+  }
+
   return (
     <>
       <Head>
         <title>Home | Space Travelling</title>
       </Head>
       <main className={styles.container}>
-        <a href="#" className={styles.post} title="Post">
-          <strong>Como utilizar Hooks</strong>
-          <p>Pensando em sincronização em vez de ciclos de vida.</p>
-          <div className={styles.info}>
-            <span>
-              <FiCalendar size={20} /> 15 Mar 2021
-            </span>
-            <span>
-              <FiUser size={20} /> Joseph Oliveira
-            </span>
-          </div>
-        </a>
-        <a href="#" className={styles.post} title="Post">
-          <strong>Criando um app CRA do zero</strong>
-          <p>
-            Tudo sobre como criar a sua primeira aplicação utilizando Create
-            React App
-          </p>
-          <div className={styles.info}>
-            <span>
-              <FiCalendar size={20} /> 19 Abr 2021
-            </span>
-            <span>
-              <FiUser size={20} /> Danilo Vieira
-            </span>
-          </div>
-        </a>
-        <a href="#" className={styles.post} title="Post">
-          <strong>Como utilizar Hooks</strong>
-          <p>Pensando em sincronização em vez de ciclos de vida.</p>
-          <div className={styles.info}>
-            <span>
-              <FiCalendar size={20} /> 15 Mar 2021
-            </span>
-            <span>
-              <FiUser size={20} /> Joseph Oliveira
-            </span>
-          </div>
-        </a>
-        <a href="#" className={styles.post} title="Post">
-          <strong>Criando um app CRA do zero</strong>
-          <p>
-            Tudo sobre como criar a sua primeira aplicação utilizando Create
-            React App
-          </p>
-          <div className={styles.info}>
-            <span>
-              <FiCalendar size={20} /> 19 Abr 2021
-            </span>
-            <span>
-              <FiUser size={20} /> Danilo Vieira
-            </span>
-          </div>
-        </a>
-        <a href="#" className={styles.post} title="Post">
-          <strong>Como utilizar Hooks</strong>
-          <p>Pensando em sincronização em vez de ciclos de vida.</p>
-          <div className={styles.info}>
-            <span>
-              <FiCalendar size={20} /> 15 Mar 2021
-            </span>
-            <span>
-              <FiUser size={20} /> Joseph Oliveira
-            </span>
-          </div>
-        </a>
-        <a href="#" className={styles.post} title="Post">
-          <strong>Criando um app CRA do zero</strong>
-          <p>
-            Tudo sobre como criar a sua primeira aplicação utilizando Create
-            React App
-          </p>
-          <div className={styles.info}>
-            <span>
-              <FiCalendar size={20} /> 19 Abr 2021
-            </span>
-            <span>
-              <FiUser size={20} /> Danilo Vieira
-            </span>
-          </div>
-        </a>
-        <button type="button" className={styles.loadMorePosts}>
-          Carregar mais posts
-        </button>
+        {posts.map(post => (
+          <Link href={`/post/${post.uid}`} key={post.uid}>
+            <a className={styles.post} title={`Post: ${post.data.title}`}>
+              <strong>{post.data.title}</strong>
+              <p>{post.data.subtitle}</p>
+              <div className={styles.info}>
+                <div>
+                  <FiCalendar size={20} />
+                  <span>
+                    {format(
+                      new Date(post.first_publication_date),
+                      'dd MMM yyyy',
+                      {
+                        locale: ptBR,
+                      }
+                    )}
+                  </span>
+                </div>
+                <div>
+                  <FiUser size={20} />
+                  <span>{post.data.author}</span>
+                </div>
+              </div>
+            </a>
+          </Link>
+        ))}
+
+        {nextPage && (
+          <button
+            type="button"
+            className={styles.loadMorePosts}
+            onClick={handleMorePosts}
+          >
+            Carregar mais posts
+          </button>
+        )}
       </main>
     </>
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  // const prismic = getPrismicClient();
-  // const postsResponse = await prismic.query(TODO);
-  // TODO
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const prismic = getPrismicClient();
+  const response = await prismic.query(
+    [Prismic.predicates.at('document.type', 'post')],
+    {
+      fetch: ['post.title', 'post.subtitle', 'post.author'],
+      pageSize: 2,
+    }
+  );
+
+  const posts = response.results.map(post => ({
+    uid: post.uid,
+    first_publication_date: post.first_publication_date,
+    data: {
+      title: post.data.title,
+      subtitle: post.data.subtitle,
+      author: post.data.author,
+    },
+  }));
+
   return {
-    props: {},
+    props: {
+      postsPagination: {
+        next_page: response.next_page,
+        results: posts,
+      },
+    },
   };
 };

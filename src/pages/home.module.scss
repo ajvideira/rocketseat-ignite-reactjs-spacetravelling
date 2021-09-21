@@ -33,7 +33,7 @@
     display: flex;
     align-items: center;
 
-    span {
+    div {
       display: flex;
       align-items: center;
 
@@ -41,7 +41,7 @@
         margin-right: 0.5rem;
       }
 
-      & + span {
+      & + div {
         margin-left: 1.625rem;
       }
     }

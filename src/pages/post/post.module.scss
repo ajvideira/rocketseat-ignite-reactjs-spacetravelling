@@ -1,1 +1,84 @@
-// TODO
+.container {
+  width: 100%;
+  margin: 2.5rem auto 5rem;
+
+  > img {
+    width: 100%;
+    height: 400px;
+  }
+
+  article {
+    max-width: 728px;
+    margin: 5rem auto 0;
+
+    > h1 {
+      font-weight: 700;
+      font-size: 3rem;
+      line-height: 3.625rem;
+      color: var(--gray-100);
+    }
+
+    .info {
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--gray-300);
+      display: flex;
+      align-items: center;
+
+      div {
+        display: flex;
+        align-items: center;
+
+        svg {
+          margin-right: 0.5rem;
+        }
+
+        & + div {
+          margin-left: 1.625rem;
+        }
+      }
+    }
+
+    .content {
+      margin-top: 4rem;
+
+      h2 {
+        font-weight: 700;
+        font-size: 2.25rem;
+      }
+
+      p {
+        font-size: 1.125rem;
+
+        & + p,
+        & + ul,
+        & + ol {
+          margin-top: 1.125rem;
+        }
+      }
+
+      ul,
+      ol {
+        padding-left: 1rem;
+
+        & + p {
+          margin-top: 1.125rem;
+        }
+
+        li {
+          & + li {
+            margin-top: 1.125rem;
+          }
+        }
+      }
+
+      .contentItem {
+        margin-top: 2.25rem;
+      }
+
+      .body {
+        margin-top: 2.25rem;
+      }
+    }
+  }
+}
