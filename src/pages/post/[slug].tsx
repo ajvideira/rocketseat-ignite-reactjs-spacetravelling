@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 import Prismic from '@prismicio/client';
@@ -7,9 +8,11 @@ import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
 import { RichText } from 'prismic-dom';
+import { Giscus } from '@giscus/react';
 import { getPrismicClient } from '../../services/prismic';
 
 import styles from './post.module.scss';
+import { ExitPreviewButton } from '../../components/ExitPreviewButton';
 
 interface Post {
   first_publication_date: string | null;
@@ -100,6 +103,31 @@ export default function Post({ post }: PostProps): JSX.Element {
                 />
               </div>
             ))}
+          </div>
+          <div className={styles.footer}>
+            <nav className={styles.postNavigation}>
+              <Link href="#">
+                <a className={styles.postAnterior}>
+                  Como utilizar Hooks<span>Post anterior</span>
+                </a>
+              </Link>
+              <Link href="#">
+                <a className={styles.postPosterior}>
+                  Criando um app CRA do Zero<span>Próximo post</span>
+                </a>
+              </Link>
+            </nav>
+            <Giscus
+              repo="ajvideira/rocketseat-ignite-reactjs-spacetravelling"
+              repoId="MDEwOlJlcG9zaXRvcnk0MDg2MTY2NDI="
+              category="General"
+              categoryId="DIC_kwDOGFr-ws4B_K98"
+              mapping="pathname"
+              reactionsEnabled="1"
+              emitMetadata="1"
+              theme="dark"
+            />
+            <ExitPreviewButton className={styles.exitPreview} />
           </div>
         </article>
       </main>
