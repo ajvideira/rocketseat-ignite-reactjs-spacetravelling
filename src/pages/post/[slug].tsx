@@ -88,6 +88,9 @@ export default function Post({ post }: PostProps): JSX.Element {
               <span>{totalMinutes} min</span>
             </div>
           </div>
+          <p className={styles.infoUpdate}>
+            * editado em 19 mar 2021, às 15:49
+          </p>
           <div className={styles.content}>
             {post.data.content.map((contentItem, index) => (
               <div
