@@ -39,6 +39,8 @@ This project was developed with the technologies above:
 - [react-icons](https://react-icons.github.io/react-icons)
 - [React-icons](https://react-icons.github.io/react-icons)
 - [Prismic CMS](https://prismic.io)
+- [giscus](https://giscus.app)
+- [date-fns](https://date-fns.org)
 
 ## 🔖 Layout
 
