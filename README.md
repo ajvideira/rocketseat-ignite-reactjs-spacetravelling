@@ -37,7 +37,6 @@ This project was developed with the technologies above:
 - [NextJS](https://nextjs.org)
 - [Sass](https://sass-lang.com)
 - [react-icons](https://react-icons.github.io/react-icons)
-- [React-icons](https://react-icons.github.io/react-icons)
 - [Prismic CMS](https://prismic.io)
 - [giscus](https://giscus.app)
 - [date-fns](https://date-fns.org)
@@ -49,6 +48,7 @@ You can view the project layout through [this link](https://www.figma.com/file/I
 ## 🚀 How to execute
 
 - Clone the repository
+- Create a new repository on [Prismic](https://prismic.io)
 - Configure environment variables for Prismic CMS
 - Install de dependencies with `yarn`
 - Run the application with `yarn dev`
